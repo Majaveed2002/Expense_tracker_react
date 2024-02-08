@@ -10,7 +10,7 @@ export default function IncomeExpense(props) {
       </div>
       <div>
         <h4>Expense</h4>
-        <p id='money-minus' className='money minus'>-${expense}</p>
+        <p id='money-minus' className='money minus'>${expense}</p>
       </div>
     </div>
   )

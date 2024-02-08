@@ -14,6 +14,29 @@ function App() {
   const [income,setIncome] = useState(0)
   const [balance,setBalance] = useState(0)
 
+  useEffect(()=> {
+      const storedTransactions = JSON.parse(localStorage.getItem('transactions'))
+      if(storedTransactions){
+          setTransactions(storedTransactions)
+          console.log(storedTransactions)
+       }
+  },[])
+
+  // Get Income, Expense and Balance
+  useEffect(() => {
+    const calculateIncome = transactions.filter((each) => each.amount > 0).reduce((acc,each)=>{
+      return acc + each.amount
+    },0)
+    const calculateExpense = transactions.filter((each) => each.amount < 0).reduce((acc,each)=>{
+      return acc + each.amount
+    },0)
+    setIncome(calculateIncome)
+    setExpense(calculateExpense)
+    setBalance(calculateIncome+calculateExpense)
+    storeTransactionsToLocalStorage();
+},[transactions])
+
+
   // Add Transaction
   const addTransactionToList = (text,amount) => {
     if(!text || !amount){
@@ -29,27 +52,26 @@ function App() {
   }
 
     const  removeTransaction = (itemId) => {
-      setTransactions(prevState => prevState.filter(({ id }) => id !== itemId));
+      const filteredTransactions = transactions.filter((each) => {
+        return each.id !== itemId
+      })
+      setTransactions(filteredTransactions);
+      //storeTransactionsToLocalStorage();
       toast.success("Transaction deleted successfully")
     }
     
-  // Get Income, Expense and Balance
-  useEffect(() => {
-      const calculateIncome = transactions.filter((each) => each.amount > 0).reduce((acc,each)=>{
-        return acc + each.amount
-      },0)
-      const calculateExpense = transactions.filter((each) => each.amount < 0).reduce((acc,each)=>{
-        return acc + each.amount
-      },0)
-      setIncome(calculateIncome)
-      setExpense(calculateExpense)
-      setBalance(calculateIncome+calculateExpense)
-  },[transactions])
+  
+  // store transactions in localStorage
+  const storeTransactionsToLocalStorage = () => {
+    localStorage.setItem('transactions',JSON.stringify(transactions))
+  }
 
   // Create Unique Id
   const createUniqueId = () => {
     return Math.floor(Math.random() * 1000000)
   }
+
+
   
  return (
   <div>
