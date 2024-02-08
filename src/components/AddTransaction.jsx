@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
 
 export default function AddTransaction(props) {
-  const [text,setText] = useState("")
-  const [amount,setAmount] = useState(0)
-  const {addExpenseIncomeToList} = props 
+  const [text,setText] = useState('')
+  const [amount,setAmount] = useState('')
+  const {addTransactionToList} = props 
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    addExpenseIncomeToList(text,amount),
-    setAmount(0)
+    addTransactionToList(text,amount)
     setText('')
+    setAmount('')
+  }
+
+  const handleTextChange = (e) => {
+    setText(e.target.value)
+  }
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value)
   }
 
   return (
@@ -18,11 +26,11 @@ export default function AddTransaction(props) {
       <form onSubmit={handleSubmit}>
         <div className='form-control'>
           <label htmlFor="text">Text</label>
-          <input onChange={(e) => setText(e.target.value)} type="text" id='text' placeholder='Enter text...' />
+          <input onChange={handleTextChange} type="text" id='text' placeholder='Enter text...' value={text} />
         </div>
         <div className='form-control'>
           <label htmlFor="amount">Amount <br />(negative - expense positive - income)</label>
-          <input onChange={(e) => setAmount(e.target.value)} type="text" id='amount' placeholder='Enter amount...' />
+          <input onChange={handleAmountChange} type="text" id='amount' placeholder='Enter amount...' value={amount} />
         </div>
         <button type='submit' className='btn'>Add transaction</button>
       </form>
